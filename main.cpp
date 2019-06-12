@@ -35,7 +35,8 @@ int main()//int argc, char **argv)
         cam.Update(Block::sh);
         for(auto& x : Manager.world) x->Update();
         for(auto& x : Manager.world) x->Draw();
-        for(auto& x : Manager.gui) x->Draw();
+        if(Manager.mode == Mode::gui)
+            for(auto& x : Manager.gui) x->Draw();
         text.Draw();
         
         glfwSwapBuffers(Manager.window);

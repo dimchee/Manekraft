@@ -10,32 +10,37 @@ typedef GLFWwindow *Window;
 
 void processInput(Window wind)
 {
-    if(glfwGetKey(wind, GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(wind, true);
+    //if(glfwGetKey(wind, GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(wind, true);
 
-    Vec3 p; float cameraSpeed = 0.02f;
-    if(glfwGetKey(wind, GLFW_KEY_W) == GLFW_PRESS)
-        p -= Camera::main->Dir() * cameraSpeed;
-    if(glfwGetKey(wind, GLFW_KEY_S) == GLFW_PRESS)
-        p += Camera::main->Dir() * cameraSpeed;
-    if(glfwGetKey(wind, GLFW_KEY_A) == GLFW_PRESS)
-        p -= Camera::main->Rig() * cameraSpeed;
-    if(glfwGetKey(wind, GLFW_KEY_D) == GLFW_PRESS)
-        p += Camera::main->Rig() * cameraSpeed;
-    if(glfwGetKey(wind, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        p -= Camera::main->Up() * cameraSpeed;
-    if(glfwGetKey(wind, GLFW_KEY_SPACE) == GLFW_PRESS)
-        p += Camera::main->Up() * cameraSpeed;
-    Camera::main->Move(p);
+    if(Manager.mode == Mode::fps)
+    {
+        Vec3 p; float cameraSpeed = 0.02f;
+        if(glfwGetKey(wind, GLFW_KEY_W) == GLFW_PRESS)
+            p -= Camera::main->Dir() * cameraSpeed;
+        if(glfwGetKey(wind, GLFW_KEY_S) == GLFW_PRESS)
+            p += Camera::main->Dir() * cameraSpeed;
+        if(glfwGetKey(wind, GLFW_KEY_A) == GLFW_PRESS)
+            p -= Camera::main->Rig() * cameraSpeed;
+        if(glfwGetKey(wind, GLFW_KEY_D) == GLFW_PRESS)
+            p += Camera::main->Rig() * cameraSpeed;
+        if(glfwGetKey(wind, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+            p -= Camera::main->Up() * cameraSpeed;
+        if(glfwGetKey(wind, GLFW_KEY_SPACE) == GLFW_PRESS)
+            p += Camera::main->Up() * cameraSpeed;
+        Camera::main->Move(p);
+    }
 }
 
 void KeyCallback(Window wind, int key, int /*scancode*/, int action, int /*mods*/)
 {
-    if(key != GLFW_KEY_T) return;
-    if(action == GLFW_PRESS)
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         if(glfwGetInputMode(wind, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
-            glfwSetInputMode(wind, GLFW_CURSOR, GLFW_CURSOR_DISABLED), glfwSetCursorPos(wind, 0, 0);
-        else glfwSetInputMode(wind, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetInputMode(wind, GLFW_CURSOR, GLFW_CURSOR_DISABLED),
+            glfwSetCursorPos(wind, 0, 0), Manager.mode = Mode::fps;
+        else 
+            glfwSetInputMode(wind, GLFW_CURSOR, GLFW_CURSOR_NORMAL),
+            Manager.mode = Mode::gui;
     }
 }
 
@@ -77,7 +82,7 @@ void ClickCallback(GLFWwindow* wind, int button, int action, int)
 {
     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
-        if(glfwGetInputMode(wind, GLFW_CURSOR) != GLFW_CURSOR_DISABLED) 
+        if(Manager.mode == Mode::gui) 
         {
             double xpos, ypos;
             glfwGetCursorPos(wind, &xpos, &ypos);

@@ -58,6 +58,8 @@ public:
 	}
 };
 
+enum Mode { fps, gui };
+
 struct
 {
     vector<unique_ptr<Object>> world;
@@ -65,6 +67,7 @@ struct
     Vec2 Resolution = {800, 450};
     Window window;
     Watch clock;
+    Mode mode = Mode::gui;
     int start { [&]()->int // must be first
     {
         if (!glfwInit()) return false;
@@ -83,7 +86,13 @@ struct
         glfwSetScrollCallback(window, ScrollCallback);
         glfwSetMouseButtonCallback(window, ClickCallback);
         glEnable(GL_DEPTH_TEST);
-        
+
+        if(mode == Mode::fps)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED),
+            glfwSetCursorPos(window, 0, 0);
+        else 
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
         return 0;
     }()};
 } Manager;
