@@ -85,7 +85,9 @@ struct
         glfwSetKeyCallback(window, KeyCallback);
         glfwSetScrollCallback(window, ScrollCallback);
         glfwSetMouseButtonCallback(window, ClickCallback);
-        glEnable(GL_DEPTH_TEST);
+        
+        glEnable(GL_DEPTH_TEST); glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         if(mode == Mode::fps)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED),
@@ -95,6 +97,15 @@ struct
 
         return 0;
     }()};
+    void chMode()
+    {
+        if(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED),
+            glfwSetCursorPos(window, 0, 0), mode = Mode::fps;
+        else 
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL),
+            mode = Mode::gui;
+    }
 } Manager;
 
 #endif

@@ -31,6 +31,7 @@ public:
     string Type = type;
     Texture(string Path, string Type = "unknown") : type(Type)
     {
+        if(Path == "") return;
         stbi_set_flip_vertically_on_load(true);
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
@@ -42,7 +43,7 @@ public:
         unsigned char *data = stbi_load(Path.c_str(), &width, &height, &nrChannels, 0);
         if (data)
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, mode(Path), GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, mode(Path), width, height, 0, mode(Path), GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         }
         else cout << "ERROR Failed to load texture" << endl;

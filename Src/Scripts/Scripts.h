@@ -17,5 +17,5 @@ class Button : public GUI
 {
 public:
     Button(Vec2 pos, Vec2 scale): GUI("Res/box.jpg", pos, scale) {}
-    void OnClick() { cout << "test" << endl; }
+    void OnClick() { Manager.chMode(); }
 };

@@ -13,10 +13,10 @@ using namespace std;
 class GUI
 {
 private:
-    unsigned VAO, VBO;
-    Texture tex;
     static float Vertices[4*6];
+    Texture tex;
 protected:
+    unsigned VAO, VBO;
     Vec2 pos;
     Vec2 scale;
 public:
@@ -38,7 +38,7 @@ public:
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
         glBindVertexArray(0);
     }
-    void Draw()
+    virtual void Draw()
     {
         sh.use(); tex.use();
         sh.set("pos", pos);
@@ -71,15 +71,14 @@ Shader GUI::sh({
     {"Src/Shaders/guiVert.glsl", Vert}
 });
 
-class Text
+class Text : public GUI
 {
 private:
-    unsigned VAO, VBO;
     vector<float> Vertices;
     static Texture tex;
 public:
     static Shader sh;
-    Text(string s, float x, float y, float size)
+    Text(string s, Vec2 pos, Vec2 scale): GUI("", pos, scale)
     {
         for(unsigned i=0; i<s.length(); i++)
         {
@@ -87,10 +86,10 @@ public:
             float uvX = r16*(s[i]%16);
             float uvY = r16*(s[i]/16);
 
-            Vec2 vtUL(x +  i   *size/2, y+size);
-            Vec2 vtUR(x + (i+1)*size/2, y+size);
-            Vec2 vtDR(x + (i+1)*size/2, y     );
-            Vec2 vtDL(x +  i   *size/2, y     );
+            Vec2 vtUL(pos.x +  i   *scale.x/2, pos.y+scale.y);
+            Vec2 vtUR(pos.x + (i+1)*scale.x/2, pos.y+scale.y);
+            Vec2 vtDR(pos.x + (i+1)*scale.x/2, pos.y        );
+            Vec2 vtDL(pos.x +  i   *scale.x/2, pos.y        );
 
             Vec2 uvUL(uvX          , 1.0f - uvY      );
             Vec2 uvUR(uvX + r16/1.5, 1.0f - uvY      );

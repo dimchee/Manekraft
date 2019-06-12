@@ -20,10 +20,10 @@ int main()//int argc, char **argv)
         for(double i=-25; i<=25; i++)
             for(double j=-25; j<=25; j++)
                 Manager.world.emplace_back(new Grass({i, -1.0+sin(i+j)*1.0f, j}));
-        Manager.gui.emplace_back(new Button({0.5, 0.5}, {0.2f, 0.2}));
+        Manager.gui.emplace_back(new Text("Resume", {-0.15, -0.05}, {0.1f, 0.1f}));
+        Manager.gui.emplace_back(new Button({0.0, 0.0}, {0.2, 0.2}));
+        Manager.gui.emplace_back(new GUI("Res/blur.png",{}, {1.0, 1.0}));
     }
-
-    Text text("Test, so it is working :D", -1, -1, 0.05f);
 
     for(auto& x : Manager.world) x->Start();
 	while (!glfwWindowShouldClose(Manager.window)) if(Manager.clock.tik(60))
@@ -35,9 +35,9 @@ int main()//int argc, char **argv)
         cam.Update(Block::sh);
         for(auto& x : Manager.world) x->Update();
         for(auto& x : Manager.world) x->Draw();
+        
         if(Manager.mode == Mode::gui)
             for(auto& x : Manager.gui) x->Draw();
-        text.Draw();
         
         glfwSwapBuffers(Manager.window);
         glfwPollEvents();
