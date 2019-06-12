@@ -15,7 +15,7 @@ int main()//int argc, char **argv)
 {
     if(Manager.start) return Manager.start;
 
-    Camera cam({0.0, 0.0, 0.0}, 16.0/9);
+    Camera cam({0.0, 0.0, 0.0}, 1.0, 16.0/9);
     {
         for(double i=-25; i<=25; i++)
             for(double j=-25; j<=25; j++)

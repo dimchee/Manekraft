@@ -55,21 +55,26 @@ void FBSizeCallback(Window, int width, int height)
     Mat& m = Camera::main->Proj();
     m[0][0] = m[1][1]/width*height;
 }
-void ScrollCallback(Window, double, double yoffset)
+void ScrollCallback(Window, double, double /*yoffset*/)
 {
-    Mat& m = Camera::main->Proj();
-    if(3.0f < m[1][1] && yoffset < 0.0) // zoomout
+    /*
+    if(Manager.mode == Mode::fps)
     {
-        m[0][0] /= m[1][1];
-        m[1][1] += 1.0/yoffset*zoomSens;
-        m[0][0] *= m[1][1];
-    }
-    if(m[1][1] < 30.0f && 0.0 < yoffset) // zoomin
-    {
-        m[0][0] /= m[1][1];
-        m[1][1] += 1.0/yoffset*zoomSens;
-        m[0][0] *= m[1][1];
-    }
+        Mat& m = Camera::main->Proj();
+        if(3.0f < m[1][1] && yoffset < 0.0) // zoomout
+        {
+            m[0][0] /= m[1][1];
+            m[1][1] += 1.0/yoffset*zoomSens;
+            m[0][0] *= m[1][1];
+        }
+        if(m[1][1] < 30.0f && 0.0 < yoffset) // zoomin
+        {
+            m[0][0] /= m[1][1];
+            m[1][1] += 1.0/yoffset*zoomSens;
+            m[0][0] *= m[1][1];
+        }
+    } 
+    */
 }
 
 void ClickCallback(GLFWwindow* wind, int button, int action, int)
@@ -80,11 +85,10 @@ void ClickCallback(GLFWwindow* wind, int button, int action, int)
         {
             double xpos, ypos;
             glfwGetCursorPos(wind, &xpos, &ypos);
-            for(auto& x : Manager.gui)
-                x->Click({
-                    float(xpos)/Manager.Resolution.x*2.0f - 1.0f, 
-                    float(ypos)/Manager.Resolution.y*2.0f - 1.0f
-                });
+            for(auto& x : Manager.gui) x->Click({
+                float(xpos)/Manager.Resolution.x*2.0f - 1.0f, 
+                float(ypos)/Manager.Resolution.y*2.0f - 1.0f
+            });
         }
     }
 }

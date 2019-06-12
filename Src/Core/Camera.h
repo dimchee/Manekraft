@@ -47,7 +47,7 @@ public:
     Vec3 Up()  { return mRot.Up();  }
     Vec3 Rig() { return mRot.Rig(); }
     Vec3 Pos() { return {mPos[0][3], mPos[1][3], mPos[2][3]}; }
-    Camera(Vec3 pos, float ratio): mPos(Mat::Trans(-pos)), mProj(Mat::Proj(0.8, ratio, 0.1, 100))
+    Camera(Vec3 pos, float fov, float ratio): mPos(Mat::Trans(-pos)), mProj(Mat::Proj(fov, ratio, 0.1, 100))
     {
         main = this;
     }
