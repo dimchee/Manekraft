@@ -4,6 +4,7 @@
 #include <Src/Core/Manager.h>
 #include <Src/Core/Camera.h>
 #include <Src/Core/GUI.h>
+#include <Src/Scripts/Scripts.h>
 
 using namespace std;
 typedef GLFWwindow *Window;
@@ -89,6 +90,16 @@ void ClickCallback(GLFWwindow* wind, int button, int action, int)
                 float(xpos)/Manager.Resolution.x*2.0f - 1.0f, 
                 float(ypos)/Manager.Resolution.y*2.0f - 1.0f
             });
+        }
+        if(Manager.mode == Mode::fps) Camera::select->reset();
+    }
+    if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        if(Manager.mode == Mode::fps)
+        {
+            auto& x = *Camera::select;
+            Vec3 a = x->pos + Camera::main->Dir().norm();
+            Manager.world.emplace_back(new Grass( a.round() ));
         }
     }
 }

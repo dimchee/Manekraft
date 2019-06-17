@@ -15,11 +15,11 @@ int main()//int argc, char **argv)
 {
     if(Manager.start) return Manager.start;
 
-    Camera cam({0.0, 0.0, 0.0}, 1.0, 16.0/9);
+    Camera cam({0.0, 0.0, 0.0}, 1.0f, 16.0f/9);
     {
-        for(double i=-25; i<=25; i++)
-            for(double j=-25; j<=25; j++)
-                Manager.world.emplace_back(new Grass({i, -1.0+sin(i+j)*1.0f, j}));
+        for(int i=-25; i<=25; i++)
+            for(int j=-25; j<=25; j++)
+                Manager.world.emplace_back(new Grass({i, int(-1.0+sin(i+j)*2.0f), j}));
         Manager.gui.emplace_back(new Text("Resume", {-0.15, -0.05}, {0.1f, 0.1f}));
         Manager.gui.emplace_back(new Button({0.0, 0.0}, {0.2, 0.2}));
         Manager.gui.emplace_back(new GUI("Res/blur.png",{}, {1.0, 1.0}));
@@ -32,10 +32,10 @@ int main()//int argc, char **argv)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        cam.Update(Block::sh);
-        for(auto& x : Manager.world) x->Update();
-        for(auto& x : Manager.world) x->Draw();
-        
+        cam.Update(Block::sh); cam.Intersect();
+        for(auto& x : Manager.world) if(x)
+            x->Update(), x->Draw();
+        else ; // manage adding new blocks to that place
         if(Manager.mode == Mode::gui)
             for(auto& x : Manager.gui) x->Draw();
         

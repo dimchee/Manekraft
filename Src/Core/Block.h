@@ -4,19 +4,43 @@
 #include <Src/Core/Shader.h>
 #include <Src/Core/Texture.h>
 
+#ifndef DMAX
+#define DMAX 1e13f
+#endif
+
 class Object
 {
+private:
+    static Vec2 x, y, z; static Vec3 p;
 protected:
     Quat rot;
-    Vec3 pos;
     Mat model;
 public:
+    Vec3 pos;
     Object(Quat rot, Vec3 pos): rot(rot), pos(pos) {}
-    virtual Mat& Model() { return model = {rot, pos}; }
+    virtual Mat& Model() = delete; // { return model = {rot, pos}; }
     virtual void Start() {}
     virtual void Update() {}
     virtual void Draw() {}
-};
+    float Intersect(Vec3 Pos, Ray a)
+    {
+        a.normalize(); a = {1.0f / a.x, 1.0f / a.y, 1.0f / a.z}; 
+        return FastIntersect(Pos, a);
+    }
+    float FastIntersect(const Vec3& Pos, const Ray& a)
+    {
+        p = {-Pos.x -pos.x, -Pos.y -pos.y, -Pos.z -pos.z};
+        x = Vec2(p.x-0.5f, p.x+0.5f)*a.x;
+        y = Vec2(p.y-0.5f, p.y+0.5f)*a.y;
+        z = Vec2(p.z-0.5f, p.z+0.5f)*a.z;
+
+        float dmin = max3(x.min(), y.min(), z.min());
+        float dmax = min3(x.max(), y.max(), z.max());
+
+        if(dmax < max(dmin, 0.0f))  return DMAX;
+        else                        return dmin;
+    }
+}; Vec2 Object::x, Object::y, Object::z; Vec3 Object::p;
 
 class Block : public Object
 {
@@ -46,21 +70,20 @@ public:
     void Draw()
     {
         sh.use(); tex.use();
-        sh.set("model", Model());
+        sh.set("pos", pos);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthMask(GL_TRUE);
     }
-    Mat& Model() { return model = Mat::Trans(pos); }
 };
 float Block::Vertices[] = {
     #include "Res/cube/Cube"
 };
 
 Shader Block::sh({
-    {"Src/Shaders/frag.glsl", Frag}, 
-    {"Src/Shaders/vert.glsl", Vert}
+    {"Src/Shaders/blockFrag.glsl", Frag}, 
+    {"Src/Shaders/blockVert.glsl", Vert}
 });
 
 #endif

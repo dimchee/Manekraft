@@ -1,3 +1,6 @@
+#ifndef SCRIPTS
+#define SCRIPTS
+
 #include <Src/Core/Block.h>
 #include <Src/Core/GUI.h>
 
@@ -19,3 +22,5 @@ public:
     Button(Vec2 pos, Vec2 scale): GUI("Res/box.jpg", pos, scale) {}
     void OnClick() { Manager.chMode(); }
 };
+
+#endif

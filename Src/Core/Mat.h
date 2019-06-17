@@ -4,10 +4,16 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 #include <cassert>
 
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
+#endif
+
+#ifndef MAX_MIN_3
+#define max3(a, b, c) max(max(a, b), c)
+#define min3(a, b, c) min(min(a, b), c)
 #endif
 
 using namespace std;
@@ -19,6 +25,9 @@ struct Vec2
     Vec2(float x, float y) : x(x), y(y) {}
     string str() { return "(" + to_string(x) + ", " + to_string(y) + ")";  } 
     friend ostream& operator << (ostream& os, Vec2 a) { return os << a.str(); }
+    Vec2 operator * (float a) { return {x*a, y*a}; }
+    float min() { return std::min(x, y); }
+    float max() { return std::max(x, y); }
 };
 
 struct Vec3
@@ -27,6 +36,7 @@ struct Vec3
     Vec3() : x(0.0f), y(0.0f), z(0.0f) {}
     Vec3(double x, double y, double z) : x(x), y(y), z(z) {}
     Vec3(float x, float y, float z) : x(x), y(y), z(z) {}
+    Vec3(int x, int y, int z) : x(x), y(y), z(z) {}
     Vec3 operator * (Vec3 a) { return {y*a.z - z*a.y, z*a.x - x*a.z, x*a.y - y*a.x}; }
     Vec3 operator + (Vec3 a) { return {x+a.x, y+a.y, z+a.z}; }
     Vec3 operator - (Vec3 a) { return {x-a.x, y-a.y, z-a.z}; }
@@ -40,10 +50,11 @@ struct Vec3
     friend float dot(Vec3 a, Vec3 b) { return a.x*b.x + a.y*b.y + a.z*b.z; }
     float len() { return sqrt(x*x + y*y + z*z); }
     Vec3 norm() { return *this / len(); }
+    Vec3 round() { return {std::round(x), std::round(y), std::round(z)}; }
     void normalize() { float l = len(); x/=l; y/=l; z/=l; }
     string str() { return "(" + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ")"; }
     friend ostream& operator << (ostream& os, Vec3 a) { return os << a.str(); }
-};
+}; typedef Vec3 Ray;
 
 struct Vec4
 {

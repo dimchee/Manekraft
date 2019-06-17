@@ -3,6 +3,7 @@
 
 #include <Src/Core/Mat.h>
 #include <Src/Core/Shader.h>
+#include <Src/Core/Block.h>
 
 template<typename T, T (*norm)(const T&)>
 struct Norm
@@ -42,6 +43,7 @@ private:
     Mat mView;
     Mat mProj;
 public:
+    static vector<unique_ptr<Object>>::iterator select;
     static Camera *main;
     Vec3 Dir() { return mRot.Dir(); }
     Vec3 Up()  { return mRot.Up();  }
@@ -64,6 +66,14 @@ public:
         sh.set("proj", Proj());
         sh.set("view", View());
     }
+    void Intersect()
+    {
+        Vec3 a = {1.0f / Dir().x, 1.0f / Dir().y, 1.0f / Dir().z};
+        Vec3 pos = Pos(); float d, mind = 5.0;
+        for(auto it = Manager.world.begin(); it < Manager.world.end(); it++) if(*it)
+            if((d = (*it)->FastIntersect(pos, a)) < mind) mind = d, select = it;
+    } 
 }; Camera *Camera::main = nullptr;
+vector<unique_ptr<Object>>::iterator Camera::select;
 
 #endif
