@@ -44,6 +44,7 @@ private:
     Mat mProj;
 public:
     static vector<unique_ptr<Object>>::iterator select;
+    static Vec3 selDir;
     static Camera *main;
     Vec3 Dir() { return mRot.Dir(); }
     Vec3 Up()  { return mRot.Up();  }
@@ -68,12 +69,20 @@ public:
     }
     void Intersect()
     {
-        Vec3 a = {1.0f / Dir().x, 1.0f / Dir().y, 1.0f / Dir().z};
-        Vec3 pos = Pos(); float d, mind = 5.0;
+        Vec3 dir = Dir();
+        Vec3 a = {1.0f / dir.x, 1.0f / dir.y, 1.0f / dir.z};
+        Vec3 pos = Pos(); float d, mind = 5.0f;
         for(auto it = Manager.world.begin(); it < Manager.world.end(); it++) if(*it)
-            if((d = (*it)->FastIntersect(pos, a)) < mind) mind = d, select = it;
-    } 
+            if((d = (*it)->FastIntersect(pos, a)) < mind)
+            {
+                mind = d, select = it;
+                selDir = pos + dir*mind - (*it)->pos; // not working :P
+                selDir.normalize();
+            }
+        if(mind == 5.0f) select = Manager.world.end();
+    }
 }; Camera *Camera::main = nullptr;
 vector<unique_ptr<Object>>::iterator Camera::select;
+Vec3 Camera::selDir;
 
 #endif

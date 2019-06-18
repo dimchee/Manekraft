@@ -9,7 +9,7 @@
 using namespace std;
 typedef GLFWwindow *Window;
 
-const float camSpeed  = 0.02f;
+const float camSpeed  = 2.0f;
 const float mouseSens = 0.001f;
 const float zoomSens  = 0.1f;
 
@@ -21,17 +21,17 @@ void processInput(Window wind)
     {
         Vec3 p;
         if(glfwGetKey(wind, GLFW_KEY_W) == GLFW_PRESS)
-            p -= Camera::main->Dir() * camSpeed;
+            p -= Camera::main->Dir() * camSpeed * Manager.clock.dt;
         if(glfwGetKey(wind, GLFW_KEY_S) == GLFW_PRESS)
-            p += Camera::main->Dir() * camSpeed;
+            p += Camera::main->Dir() * camSpeed * Manager.clock.dt;
         if(glfwGetKey(wind, GLFW_KEY_A) == GLFW_PRESS)
-            p -= Camera::main->Rig() * camSpeed;
+            p -= Camera::main->Rig() * camSpeed * Manager.clock.dt;
         if(glfwGetKey(wind, GLFW_KEY_D) == GLFW_PRESS)
-            p += Camera::main->Rig() * camSpeed;
+            p += Camera::main->Rig() * camSpeed * Manager.clock.dt;
         if(glfwGetKey(wind, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-            p -= Camera::main->Up()  * camSpeed;
+            p -= Camera::main->Up()  * camSpeed * Manager.clock.dt;
         if(glfwGetKey(wind, GLFW_KEY_SPACE) == GLFW_PRESS)
-            p += Camera::main->Up()  * camSpeed;
+            p += Camera::main->Up()  * camSpeed * Manager.clock.dt;
         Camera::main->Move(p);
     }
 }
@@ -95,11 +95,11 @@ void ClickCallback(GLFWwindow* wind, int button, int action, int)
     }
     if(button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
     {
-        if(Manager.mode == Mode::fps)
+        if(Manager.mode == Mode::fps && Camera::select != Manager.world.end())
         {
             auto& x = *Camera::select;
-            Vec3 a = x->pos + Camera::main->Dir().norm();
-            Manager.world.emplace_back(new Grass( a.round() ));
+            Vec3 a = x->pos + Camera::main->Dir();
+            Manager.tmp.emplace(new Grass( a.round() ));
         }
     }
 }

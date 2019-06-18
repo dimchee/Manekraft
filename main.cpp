@@ -19,7 +19,7 @@ int main()//int argc, char **argv)
     {
         for(int i=-25; i<=25; i++)
             for(int j=-25; j<=25; j++)
-                Manager.world.emplace_back(new Grass({i, int(-1.0+sin(i+j)*2.0f), j}));
+                Manager.world.emplace_back(new Grass({i, int(-1.0+sin(i+j)*1.6f), j}));
         Manager.gui.emplace_back(new Text("Resume", {-0.15, -0.05}, {0.1f, 0.1f}));
         Manager.gui.emplace_back(new Button({0.0, 0.0}, {0.2, 0.2}));
         Manager.gui.emplace_back(new GUI("Res/blur.png",{}, {1.0, 1.0}));
@@ -35,7 +35,11 @@ int main()//int argc, char **argv)
         cam.Update(Block::sh); cam.Intersect();
         for(auto& x : Manager.world) if(x)
             x->Update(), x->Draw();
-        else ; // manage adding new blocks to that place
+        else if(!Manager.tmp.empty())
+            x = std::move(Manager.tmp.front()), Manager.tmp.pop();
+        while(!Manager.tmp.empty())
+            Manager.world.emplace_back(std::move(Manager.tmp.front())), Manager.tmp.pop();
+
         if(Manager.mode == Mode::gui)
             for(auto& x : Manager.gui) x->Draw();
         

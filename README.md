@@ -5,3 +5,4 @@
 - sqlite for terrain
 - blocks
 - lights
+- collision detection

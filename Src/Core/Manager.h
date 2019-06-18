@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <memory>
+#include <queue>
 
 using namespace std;
 typedef GLFWwindow *Window;
@@ -33,21 +34,22 @@ private:
 	double time;
 	double old;
     double d;
-	map<string, long long> ch; 
-public:
-	Watch() : time(0.0), old(0.0), d(0.0) {}
-	double delta()
+	map<string, long long> ch;
+    double delta()
 	{
 		old = time;
 		time = glfwGetTime();
 		return time - old; 
 	}
+public:
+    double dt;
+	Watch() : time(0.0), old(0.0), d(0.0) {}
 	void mesureStart() { old = glfwGetTime(); }
 	double mesureEnd() { return glfwGetTime() - old; }
     bool tik(int fps)
     {
         d += delta();
-        return d > 1.0/fps ? d=0.0, true : false;
+        return d > 1.0/fps ? dt = d, d = 0.0, true : false;
     }
 	bool checkForChange(string file)
 	{
@@ -63,6 +65,7 @@ enum Mode { fps, gui };
 struct
 {
     vector<unique_ptr<Object>> world;
+    queue<unique_ptr<Object>> tmp;
     vector<unique_ptr<GUI>> gui;
     Vec2 Resolution = {800, 450};
     Window window;
