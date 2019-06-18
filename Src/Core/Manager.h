@@ -76,7 +76,7 @@ struct
         if (!glfwInit()) return false;
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         window = glfwCreateWindow(Resolution.x, Resolution.y, "ma-NeKraft", NULL, NULL);
         if (!window) return cout << "Failed to initialize GLFW" << endl, glfwTerminate(), -1;
         glfwMakeContextCurrent(window);
