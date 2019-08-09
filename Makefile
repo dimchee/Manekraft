@@ -7,16 +7,16 @@ LIB			:= lib
 
 SRC			:= Src
 
-MLIB		:= libglad.a liblua.a
+MLIB		:= libglad.a liblua.a libsqlite.a
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= main.exe
-LIBRARIES	:= -lglfw3 -lglad -lopengl32 -lwinmm -lgdi32 -llua
+LIBRARIES	:= -lglfw3 -lglad -lopengl32 -lwinmm -lgdi32 -llua -lsqlite
 BUILD		:= $(BUILD)/Win32
 # MLIB		:= $(MLIB) libglfw3
 else
 EXECUTABLE	:= main
-LIBRARIES	:= -lglfw3 -lglad -lGLU -lGL -lX11 -lpthread -ldl -llua
+LIBRARIES	:= -lglfw3 -lglad -lGLU -lGL -lX11 -lpthread -ldl -llua -lsqlite
 BUILD		:= $(BUILD)/Linux
 endif
 

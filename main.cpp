@@ -9,7 +9,8 @@
 #include <iostream>
 #include <vector>
 
-#include <Src/Scripts/Scripts.h>
+#include <Src/Scripts/Blocks.h>
+
 
 int main()//int argc, char **argv)
 {

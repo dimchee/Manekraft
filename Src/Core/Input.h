@@ -4,7 +4,7 @@
 #include <Src/Core/Manager.h>
 #include <Src/Core/Camera.h>
 #include <Src/Core/GUI.h>
-#include <Src/Scripts/Scripts.h>
+#include <Src/Scripts/Blocks.h>
 
 using namespace std;
 typedef GLFWwindow *Window;
